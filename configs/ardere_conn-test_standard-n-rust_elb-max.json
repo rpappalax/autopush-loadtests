@@ -1,0 +1,54 @@
+{
+  "ecs_name": "loadtests-autopush-rpapa",
+  "name": "Loadtest",
+  "description": "autopush-client-ep-loadtests",
+  "metrics_options": {
+    "enabled": true,
+    "dashboard": {
+      "admin_user": "admin",
+      "admin_password": "testing",
+      "name": "autopush",
+      "filename": "gf_basic_dashboard.json"
+    }
+  },
+  "steps": [
+    {
+      "name": "WARMUP_autopush",
+      "cmd": "./apenv/bin/aplt_testplan -u wss://autopush.stage.mozaws.net 'aplt.scenarios:connect_and_idle_forever,500000,10,0' --endpoint https://updates-autopush.stage.mozaws.net",
+      "instance_count": 6,
+      "instance_type": "m3.medium",
+      "run_max_time": 5400,
+      "container_name": "bbangert/ap-loadtester:latest",
+      "docker_series": "client_endpoint_tests"
+    },
+    {
+      "name": "WARMUP_autopush_rust",
+      "cmd": "./apenv/bin/aplt_testplan -u wss://autopush-rust.stage.mozaws.net 'aplt.scenarios:connect_and_idle_forever,500000,10,0' --endpoint https://updates-autopush.stage.mozaws.net",
+      "instance_count": 18,
+      "instance_type": "m3.medium",
+      "run_max_time": 5400,
+      "container_name": "bbangert/ap-loadtester:latest",
+      "docker_series": "client_endpoint_tests"
+    },
+    {
+      "name": "autopush",
+      "cmd": "./apenv/bin/aplt_testplan -u wss://autopush.stage.mozaws.net 'aplt.scenarios:connect_and_idle_forever,500000,10,0' --endpoint https://updates-autopush.stage.mozaws.net",
+      "instance_count": 6,
+      "instance_type": "m3.medium",
+      "run_max_time": 5400,
+      "run_delay": 5460,
+      "container_name": "bbangert/ap-loadtester:latest",
+      "docker_series": "client_endpoint_tests"
+    },
+    {
+      "name": "autopush_rust",
+      "cmd": "./apenv/bin/aplt_testplan -u wss://autopush-rust.stage.mozaws.net 'aplt.scenarios:connect_and_idle_forever,500000,10,0' --endpoint https://updates-autopush.stage.mozaws.net",
+      "instance_count": 18,
+      "instance_type": "m3.medium",
+      "run_max_time": 5400,
+      "run_delay": 5460,
+      "container_name": "bbangert/ap-loadtester:latest",
+      "docker_series": "client_endpoint_tests"
+    }
+  ]
+}

@@ -1,0 +1,50 @@
+{ 
+  "ecs_name": "autopush-loadtests-rpapa", 
+  "name": "Loadtest", 
+  "description": "autopush-client-ep-loadtests", 
+  "metrics_options": { 
+    "enabled": true, 
+    "dashboard": { 
+      "admin_user": "admin", 
+      "admin_password": "testing", 
+      "name": "autopush", 
+      "filename": "gf_basic_dashboard.json" 
+    } 
+  }, 
+  "steps": [ 
+    { 
+      "name": "EP-standard",
+      "cmd": "./apenv/bin/aplt_testplan wss://autopush.stage.mozaws.net 'aplt.scenarios:notification_forever,100,1,0' --endpoint https://updates-autopush.stage.mozaws.net",
+      "instance_count": 3,
+      "instance_type": "m3.medium",
+      "run_max_time": 1800,
+      "container_name": "bbangert/ap-loadtester:latest",
+        "docker_series": "client_endpoint_tests"
+    },
+    { 
+      "name": "EP-vapid",
+      "run_delay": 1860,
+      "cmd": "./apenv/bin/aplt_testplan wss://autopush.stage.mozaws.net 'aplt.scenarios:notification_forever,100,1,0,{\"vapid_claims\":{\"aud\":\"https://example.com\"\\,\"sub\":\"mailto:squirrel@example.com\"}}' --endpoint https://updates-autopush.stage.mozaws.net",
+      "instance_count": 3,
+      "instance_type": "m3.medium",
+      "run_max_time": 1800,
+      "container_name": "bbangert/ap-loadtester:latest",
+        "docker_series": "client_endpoint_tests"
+    },
+    { 
+      "name": "EP-partner",
+      "run_delay": 3720,
+      "cmd": "./apenv/bin/aplt_testplan wss://autopush.stage.mozaws.net 'aplt.scenarios:notification_forever,100,1,0' --endpoint https://updates-partner-autopush.stage.mozaws.net",
+      "instance_count": 3,
+      "instance_type": "m3.medium",
+      "run_max_time": 1800,
+      "container_name": "bbangert/ap-loadtester:latest",
+      "env": {
+        "ENDPOINT_SSL_CERT": "-----BEGIN RSA PRIVATE KEY-----\nMIIEowIBAAKCAQEAxWmh35zZ3302oMd19C+iHQuXXvatLKdUDxC9uE2ZxoYGvKdw\noySvDPy4XHW2c0GtRc9Pn8EfS0SfUEIfyP7WbIsdV9P9xjHmFkTHHXvFdpG9YUIx\nG1VSzD7gZF3sQK4+cgHFtUSLVI3ycZNbTsBjiQ89wkTcQdACvss4OZyE0d8Kvblx\n+hI9dwTO84vXYYecr+MVd0N/xmoZi79QxhPAKS7oDD5lUaXBMNqqTPg2UPknzS0/\npMKPXHtvvqxsjUEsHDxzeH27nMxzGXRXrIkTaYB8JE5nWOweyQW6ZVH0Z67UP9gz\nYhrrV/1BddVEEnPQykCIVRp6c2mrWPf1tgSUQQIDAQABAoIBACtrFi0mRE0BLxih\nhfHU4CTfPcWnH2No0fYWSoPUnXOqWqT3drCLCu0iUDIVubETytZFyE9snENjrl5q\njK8aTXLGDggZGgGTS/Wt3tU/OajgWPShKEfItlMxqQyqE6IOMLHGbgN2Nea86YvN\nSxHBAqNMdNrbZk4bP99StuUE5bl6n96lvxUTncL0UehldzhJF7uFKOb+1G/XzoxH\ndYwLNQn0fzVrKtPLF9aDIqkjPunTKgVGRyTYI3KQU+FTXRoUeuazLMILRhdrVxWQ\nGY60rgonMu2ybekgEEXTW01Y73QN60pPwMubE6B++zbQPPYFQQy3uIio7vvZXtMx\nR/m3b5kCgYEA6YJsMyQ2em4IQQiqKH3I5IaS0wSsgkAMFFD4aepQDQuBRrnZhmem\n3SyKnatob5uas8ueJPkDI7Hmiz2aa7pRz/YwvHTJitTEWE0ruMkjIn4TjKrzdu5T\nI8wOEBwnEMrGs15BeLxqKJ5MlYaInIB+gUl2K6lxy1VNv/sCXe99zlMCgYEA2G0u\nGSshy19WMbE04VV6TjoQR1jFUeAWyzjk645ZytLFzJ+cLDDTdHzjp2Qu1qNt8WxL\nW7CgegEdZFm5+Xsia/hUL/o4HPvd7qoyry2Y76BGzVuistSzByyAS2WLa8huX7/T\nRdR5U3IRpi8a26zF1eEuS8F6cSexhZ/0nPGfuJsCgYBSwEaJ5SZtQrsoGOL8UH82\nBT7ZC0n7KqldNcii+EeAJ/ibUNd2mxr2PIevEoSDMNilKN6Vaa2kI7J4287yqGe/\n1BY3YwfdbENcq5R3+se5vIY/DoITPqg2AmVlbiSl/cZm4FtBZzwTwu2O+8tD8wFh\n3d/D31uVXFieVVzkXy/tQwKBgQCMcv3xc14w/qOPB/LLMI94aJHb2y3iHkxsgXV9\nsBlxWCroycOtodn3xHxwSsFipRhaDe8xh4P86PBMCTZ5QoFqE/N+VyFHHeQ+V9Eg\ngbS3/Qk1h3wkFYhA5Y40X6eEwMNv+6p9rI83qdTuRa9mU87nJ4TFwL9W421+y/kQ\nSHVgdQKBgEcDkLQIlOaoL4G5pDReqcVwI7bjwNZw7Q/w5TZXPcyg+BTca8V2vhaY\niegrAKbsyVoxcgMH5axD/RjKx+i03YqxNeSdN74f0Xc8EnCzbLxDAUtqztWJ4AEr\nGZcDOsHaxUV0tJWGj+aOQmZfivfHz1oH+ajHkvr6YduNmLhx25t6\n-----END RSA PRIVATE KEY-----\n-----BEGIN CERTIFICATE-----\nMIIE4jCCA8qgAwIBAgIJAPnTX0kcAcfTMA0GCSqGSIb3DQEBCwUAMIGmMQswCQYD\nVQQGEwJVUzELMAkGA1UECBMCQ0ExEDAOBgNVBAoTB01vemlsbGExGjAYBgNVBAsT\nEUNsb3VkIFNlcnZpY2VzIFFBMS4wLAYDVQQDEyVDbG91ZCBTZXJ2aWNlcyBRQSAo\nYXV0b3B1c2gtdGVzdGluZzEpMSwwKgYJKoZIhvcNAQkBFh1jbG91ZC1zZXJ2aWNl\ncy1xYUBtb3ppbGxhLm9yZzAeFw0xNjEyMjgxOTQ0NTdaFw0yMDEyMjcxOTQ0NTda\nMIGmMQswCQYDVQQGEwJVUzELMAkGA1UECBMCQ0ExEDAOBgNVBAoTB01vemlsbGEx\nGjAYBgNVBAsTEUNsb3VkIFNlcnZpY2VzIFFBMS4wLAYDVQQDEyVDbG91ZCBTZXJ2\naWNlcyBRQSAoYXV0b3B1c2gtdGVzdGluZzEpMSwwKgYJKoZIhvcNAQkBFh1jbG91\nZC1zZXJ2aWNlcy1xYUBtb3ppbGxhLm9yZzCCASIwDQYJKoZIhvcNAQEBBQADggEP\nADCCAQoCggEBAMVpod+c2d99NqDHdfQvoh0Ll172rSynVA8QvbhNmcaGBryncKMk\nrwz8uFx1tnNBrUXPT5/BH0tEn1BCH8j+1myLHVfT/cYx5hZExx17xXaRvWFCMRtV\nUsw+4GRd7ECuPnIBxbVEi1SN8nGTW07AY4kPPcJE3EHQAr7LODmchNHfCr25cfoS\nPXcEzvOL12GHnK/jFXdDf8ZqGYu/UMYTwCku6Aw+ZVGlwTDaqkz4NlD5J80tP6TC\nj1x7b76sbI1BLBw8c3h9u5zMcxl0V6yJE2mAfCROZ1jsHskFumVR9Geu1D/YM2Ia\n61f9QXXVRBJz0MpAiFUaenNpq1j39bYElEECAwEAAaOCAQ8wggELMB0GA1UdDgQW\nBBTLeoxEIiLUZ1auLYSuJOrX6hBJyTCB2wYDVR0jBIHTMIHQgBTLeoxEIiLUZ1au\nLYSuJOrX6hBJyaGBrKSBqTCBpjELMAkGA1UEBhMCVVMxCzAJBgNVBAgTAkNBMRAw\nDgYDVQQKEwdNb3ppbGxhMRowGAYDVQQLExFDbG91ZCBTZXJ2aWNlcyBRQTEuMCwG\nA1UEAxMlQ2xvdWQgU2VydmljZXMgUUEgKGF1dG9wdXNoLXRlc3RpbmcxKTEsMCoG\nCSqGSIb3DQEJARYdY2xvdWQtc2VydmljZXMtcWFAbW96aWxsYS5vcmeCCQD5019J\nHAHH0zAMBgNVHRMEBTADAQH/MA0GCSqGSIb3DQEBCwUAA4IBAQCLnOFusWpr5pY1\nkuJ0vX8GCPKesvDjIGVCPTbiKl3c93GaQKFRNSM2DjXe4n7+72fm7fl+ebPNibDQ\nIN/RmO3ci5OlKc8Xh6VF/R/D9YVXxGOs9MkfhzmKOIns9mRUKghHT4gIhYg/Z73h\nlrSRo1AIPkhrlpY/pFzrQwTOw7zx6XDrpg60CUms2sjh6NdOFiMSy6rF5WKgpRUY\n1v9xXKGfx8BTLnxml/2ozGYhHPhgOAuIFC1gwMdXp2soZdOymuH5dtZWqeXdFXwF\n7EHCEzqXqE3pVB5rmpfVvpXrgT5tMQQKnT+XNTEIgDuvU5Gd/tyyMMhJTy44V8Yw\ncc7hUrcm\n-----END CERTIFICATE-----\n"
+      },
+        "docker_series": "client_endpoint_tests"
+    }
+  ]
+}
+
+
